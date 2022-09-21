@@ -4,6 +4,7 @@
 # include <iostream>
 # include <string>
 # include "Tuple.hpp"
+# include "Matrix.hpp"
 
 class Ray
 {
@@ -24,6 +25,8 @@ class Ray
 		void setDirection(Tuple &direction);
 
 		Tuple position(float t) const;
+
+		Ray transform(Matrix const &m) const;
 
 	private:
 		

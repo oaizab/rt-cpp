@@ -43,7 +43,15 @@ Matrix::Matrix(int dim, float values[])
 
 Matrix::Matrix(const Matrix &src)
 {
-	*this = src;
+	width = src.width;
+	height = src.height;
+	matrix = new float*[height];
+	for (int i = 0; i < height; i++)
+	{
+		matrix[i] = new float[width];
+		for (int j = 0; j < width; j++)
+			matrix[i][j] = src.matrix[i][j];
+	}
 }
 
 Matrix::~Matrix()

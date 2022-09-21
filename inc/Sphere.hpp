@@ -4,6 +4,7 @@
 # include <iostream>
 # include <string>
 # include "Ray.hpp"
+# include "Matrix.hpp"
 
 class Intersections;
 
@@ -22,12 +23,17 @@ class Sphere
 		int getId() const;
 		Intersections intersect(Ray const &r) const;
 
+		Matrix getTransform() const;
+		void setTransform(Matrix const &m);
+		void addTransform(Matrix const &m);
+
 		static Sphere nothing;
 
 	private:
 	
 		static int _count;
 		int _id;
+		Matrix _transform;
 
 };
 

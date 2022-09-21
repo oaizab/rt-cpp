@@ -7,5 +7,9 @@
 #include "Color.hpp"
 #include "Canvas.hpp"
 #include "Matrix.hpp"
+#include "Ray.hpp"
+#include "Sphere.hpp"
+#include "Intersection.hpp"
+#include "Intersections.hpp"
 
 #endif

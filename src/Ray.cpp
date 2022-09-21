@@ -66,3 +66,8 @@ Tuple Ray::position(float t) const
 {
 	return _origin + _direction * t;
 }
+
+Ray Ray::transform(Matrix const &m) const
+{
+	return Ray(m * _origin, m * _direction);
+}
