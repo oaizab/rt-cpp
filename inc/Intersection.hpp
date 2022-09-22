@@ -21,6 +21,7 @@ class Intersection
 		Sphere getObject() const;
 
 		bool operator==(Intersection const &rhs) const;
+		bool operator!=(Intersection const &rhs) const;
 
 		static Intersection nothing();
 

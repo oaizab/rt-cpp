@@ -53,3 +53,8 @@ Intersection Intersection::nothing()
 {
 	return Intersection(-1, Sphere::nothing);
 }
+
+bool Intersection::operator!=(Intersection const &rhs) const
+{
+	return !(*this == rhs);
+}
