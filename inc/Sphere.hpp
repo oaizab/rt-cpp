@@ -5,6 +5,7 @@
 # include <string>
 # include "Ray.hpp"
 # include "Matrix.hpp"
+# include "Material.hpp"
 
 class Intersections;
 
@@ -29,11 +30,18 @@ class Sphere
 
 		static Sphere nothing;
 
+		Tuple normalAt(Tuple const p) const;
+
+		// Material getMaterial() const;
+		Material &getMaterial();
+		void setMaterial(Material const &m);
+
 	private:
 	
 		static int _count;
 		int _id;
 		Matrix _transform;
+		Material _material;
 
 };
 

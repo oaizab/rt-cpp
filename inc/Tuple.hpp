@@ -40,6 +40,8 @@ class Tuple
 		static Tuple point(float x, float y, float z);
 		static Tuple vector(float x, float y, float z);
 
+		Tuple reflect(Tuple const &normal) const;
+
 	private:
 	
 		float _x;

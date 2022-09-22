@@ -187,3 +187,10 @@ Tuple Tuple::vector(float x, float y, float z)
 	Tuple t(x, y, z, 0);
 	return t;
 }
+
+Tuple Tuple::reflect(Tuple const &normal) const
+{
+	Tuple t;
+	t = *this - normal * 2 * this->dot(normal);
+	return t;
+}

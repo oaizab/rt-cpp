@@ -25,6 +25,8 @@ Sphere &Sphere::operator=(Sphere const &rhs)
 	if (this != &rhs)
 	{
 		_id = rhs._id;
+		_transform = rhs._transform;
+		_material = rhs._material;
 	}
 	return *this;
 }
@@ -74,4 +76,28 @@ void Sphere::setTransform(Matrix const &m)
 void Sphere::addTransform(Matrix const &m)
 {
 	_transform = m * _transform;
+}
+
+Tuple Sphere::normalAt(Tuple const p) const
+{
+	Tuple object_point = _transform.inverse() * p;
+	Tuple object_normal = object_point - Tuple::point(0, 0, 0);
+	Tuple world_normal = _transform.inverse().transpose() * object_normal;
+	world_normal.setW(0);
+	return world_normal.normalize();
+}
+
+// Material Sphere::getMaterial() const
+// {
+// 	return _material;
+// }
+
+Material &Sphere::getMaterial()
+{
+	return _material;
+}
+
+void Sphere::setMaterial(Material const &m)
+{
+	_material = m;
 }
