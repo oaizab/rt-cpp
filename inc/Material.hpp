@@ -1,12 +1,10 @@
-#ifndef MATERIAL_HPP
-# define MATERIAL_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-
-# include "Color.hpp"
-# include "Tuple.hpp"
-# include "Light.hpp"
+#include <iostream>
+#include <string>
+#include "Color.hpp"
+#include "Tuple.hpp"
+#include "Light.hpp"
 
 class Material
 {
@@ -44,5 +42,3 @@ class Material
 };
 
 std::ostream &operator<<(std::ostream &o, Material const &i);
-
-#endif /* MATERIAL_H */

@@ -1,11 +1,10 @@
-#ifndef SPHERE_HPP
-# define SPHERE_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include "Ray.hpp"
-# include "Matrix.hpp"
-# include "Material.hpp"
+#include <iostream>
+#include <string>
+#include "Ray.hpp"
+#include "Matrix.hpp"
+#include "Material.hpp"
 
 class Intersections;
 
@@ -22,15 +21,16 @@ class Sphere
 		bool operator==(Sphere const &rhs) const;
 
 		int getId() const;
-		Intersections intersect(Ray const &r) const;
+		Intersections intersect(Ray const &r);
 
 		Matrix getTransform() const;
 		void setTransform(Matrix const &m);
 		void addTransform(Matrix const &m);
+		Matrix getInverseTransform();
 
 		static Sphere nothing;
 
-		Tuple normalAt(Tuple const p) const;
+		Tuple normalAt(Tuple const p);
 
 		// Material getMaterial() const;
 		Material &getMaterial();
@@ -40,11 +40,11 @@ class Sphere
 	
 		static int _count;
 		int _id;
+		bool _inv;
 		Matrix _transform;
+		Matrix _inverse;
 		Material _material;
 
 };
 
 std::ostream &operator<<(std::ostream &o, Sphere const &i);
-
-#endif /* SPHERE_H */

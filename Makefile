@@ -12,7 +12,7 @@ NAME	=	rt
 
 CXX		=	c++
 
-CXXFLAGS=	-std=c++17 -Wall -Wextra -Werror -g
+CXXFLAGS=	-std=c++17 -Wall -Wextra -Werror -Ofast
 
 RM		=	rm -rf
 

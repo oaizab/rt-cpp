@@ -1,10 +1,9 @@
-#ifndef INTERSECTIONS_HPP
-# define INTERSECTIONS_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include <vector>
-# include "Intersection.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+#include "Intersection.hpp"
 
 class Intersection;
 
@@ -35,5 +34,3 @@ class Intersections
 };
 
 std::ostream &operator<<(std::ostream &o, Intersections const &i);
-
-#endif /* INTERSECTIONS_H */

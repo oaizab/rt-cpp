@@ -1,9 +1,8 @@
-#ifndef CANVAS_HPP
-# define CANVAS_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include "Color.hpp"
+#include <iostream>
+#include <string>
+#include "Color.hpp"
 
 class Canvas
 {
@@ -34,5 +33,3 @@ class Canvas
 };
 
 std::ostream &operator<<(std::ostream &o, Canvas const &i);
-
-#endif /* CANVAS_H */

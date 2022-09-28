@@ -1,5 +1,4 @@
-#ifndef MAIN_HPP
-#define MAIN_HPP
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -15,5 +14,3 @@
 #include "Intersections.hpp"
 #include "Light.hpp"
 #include "Material.hpp"
-
-#endif

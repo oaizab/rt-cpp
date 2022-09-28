@@ -1,10 +1,9 @@
-#ifndef LIGHT_HPP
-# define LIGHT_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include "Tuple.hpp"
-# include "Color.hpp"
+#include <iostream>
+#include <string>
+#include "Tuple.hpp"
+#include "Color.hpp"
 
 class Light
 {
@@ -32,5 +31,3 @@ class Light
 };
 
 std::ostream &operator<<(std::ostream &o, Light const &i);
-
-#endif /* LIGHT_H */

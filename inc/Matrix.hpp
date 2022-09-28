@@ -1,9 +1,8 @@
-#ifndef MATRIX_HPP
-# define MATRIX_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include "Tuple.hpp"
+#include <iostream>
+#include <string>
+#include "Tuple.hpp"
 
 class Matrix
 {
@@ -57,5 +56,3 @@ class Matrix
 };
 
 std::ostream &operator<<(std::ostream &o, Matrix const &i);
-
-#endif /* MATRIX_H */

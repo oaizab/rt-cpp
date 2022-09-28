@@ -1,8 +1,7 @@
-#ifndef COLOR_HPP
-# define COLOR_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
+#include <iostream>
+#include <string>
 
 class Color
 {
@@ -42,5 +41,3 @@ class Color
 };
 
 std::ostream &operator<<(std::ostream &o, Color const &i);
-
-#endif /* COLOR_H */

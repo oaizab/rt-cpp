@@ -1,9 +1,8 @@
-#ifndef INTERSECTION_HPP
-# define INTERSECTION_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include "Sphere.hpp"
+#include <iostream>
+#include <string>
+#include "Sphere.hpp"
 
 class Sphere;
 
@@ -34,5 +33,3 @@ class Intersection
 };
 
 std::ostream &operator<<(std::ostream &o, Intersection const &i);
-
-#endif /* INTERSECTION_H */

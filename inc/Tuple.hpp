@@ -1,8 +1,7 @@
-#ifndef TUPLE_HPP
-# define TUPLE_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
+#include <iostream>
+#include <string>
 
 class Tuple
 {
@@ -51,5 +50,3 @@ class Tuple
 };
 
 std::ostream &operator<<(std::ostream &o, Tuple const &i);
-
-#endif /* TUPLE_H */

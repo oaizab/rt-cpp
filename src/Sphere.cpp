@@ -6,12 +6,13 @@
 int Sphere::_count = 0;
 Sphere Sphere::nothing = Sphere();
 
-Sphere::Sphere() : _transform(Matrix::identity(4))
+Sphere::Sphere() : _transform(Matrix::identity(4)), _inverse(Matrix::identity(4))
 {
 	_id = _count++;
+	_inv = false;
 }
 
-Sphere::Sphere(const Sphere &src) : _transform(src._transform)
+Sphere::Sphere(const Sphere &src) : _transform(src._transform), _inverse(src._inverse)
 {
 	*this = src;
 }
@@ -26,6 +27,8 @@ Sphere &Sphere::operator=(Sphere const &rhs)
 	{
 		_id = rhs._id;
 		_transform = rhs._transform;
+		_inverse = rhs._inverse;
+		_inv = rhs._inv;
 		_material = rhs._material;
 	}
 	return *this;
@@ -47,10 +50,21 @@ int Sphere::getId() const
 	return _id;
 }
 
-Intersections Sphere::intersect(Ray const &r) const
+Matrix Sphere::getInverseTransform()
+{
+	if (!_inv)
+	{
+		_inverse = _transform.inverse();
+		_inv = true;
+	}
+	return _inverse;
+}
+
+Intersections Sphere::intersect(Ray const &r)
 {
 	Intersections xs;
-	Ray ray = r.transform(_transform.inverse());
+	Ray ray = r.transform(getInverseTransform());
+	// Ray ray = r.transform(_transform.inverse());
 	Tuple sphere_to_ray = ray.getOrigin() - Tuple::point(0, 0, 0);
 	float a = ray.getDirection().dot(ray.getDirection());
 	float b = 2 * ray.getDirection().dot(sphere_to_ray);
@@ -58,8 +72,9 @@ Intersections Sphere::intersect(Ray const &r) const
 	float discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 		return xs;
-	xs.add(Intersection((-b - sqrt(discriminant)) / (2 * a), *this));
-	xs.add(Intersection((-b + sqrt(discriminant)) / (2 * a), *this));
+	float dsqrt = sqrt(discriminant);
+	xs.add(Intersection((-b - dsqrt) / (2 * a), *this));
+	xs.add(Intersection((-b + dsqrt) / (2 * a), *this));
 	return xs;
 }
 
@@ -71,18 +86,20 @@ Matrix Sphere::getTransform() const
 void Sphere::setTransform(Matrix const &m)
 {
 	_transform = m;
+	_inv = false;
 }
 
 void Sphere::addTransform(Matrix const &m)
 {
 	_transform = m * _transform;
+	_inv = false;
 }
 
-Tuple Sphere::normalAt(Tuple const p) const
+Tuple Sphere::normalAt(Tuple const p)
 {
-	Tuple object_point = _transform.inverse() * p;
+	Tuple object_point = getInverseTransform() * p;
 	Tuple object_normal = object_point - Tuple::point(0, 0, 0);
-	Tuple world_normal = _transform.inverse().transpose() * object_normal;
+	Tuple world_normal = getInverseTransform().transpose() * object_normal;
 	world_normal.setW(0);
 	return world_normal.normalize();
 }

@@ -1,10 +1,9 @@
-#ifndef RAY_HPP
-# define RAY_HPP
+#pragma once
 
-# include <iostream>
-# include <string>
-# include "Tuple.hpp"
-# include "Matrix.hpp"
+#include <iostream>
+#include <string>
+#include "Tuple.hpp"
+#include "Matrix.hpp"
 
 class Ray
 {
@@ -35,5 +34,3 @@ class Ray
 };
 
 std::ostream &operator<<(std::ostream &o, Ray const &i);
-
-#endif /* RAY_H */
