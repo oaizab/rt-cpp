@@ -1,8 +1,9 @@
 #include "main.hpp"
 
-int main()
-{
-	int smain(void);
-	return smain();
-	return 0;
+
+int main() {
+	int tmain(void);
+	return tmain();
 }
+
+
