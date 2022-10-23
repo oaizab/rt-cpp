@@ -1,58 +1,35 @@
 #pragma once
 
-#include <iostream>
-#include <string>
 #include "Tuple.hpp"
 
 class Matrix
 {
-
 	public:
-
-		Matrix(int rows, int cols);
+		Matrix();
 		Matrix(int dim);
-		Matrix(int dim, float values[]);
 		Matrix(Matrix const &src);
-		~Matrix();
+		~Matrix() = default;
 
 		Matrix &operator=(Matrix const &rhs);
 
-		int getWidth() const;
-		int getHeight() const;
-		float getValue(int row, int col) const;
-		void setValue(int row, int col, float value);
+		bool operator==(Matrix const &m) const;
+		bool operator!=(Matrix const &m) const;
 
-		bool operator==(Matrix const &rhs) const;
-		bool operator!=(Matrix const &rhs) const;
+		Matrix operator*(Matrix const &m) const;
+		Tuple operator*(Tuple const &t) const;
 
-		Matrix operator*(Matrix const &rhs) const;
-		Tuple operator*(Tuple const &rhs) const;
-		float operator()(int row, int col) const;
-		float &operator()(int row, int col);
-
-		static Matrix identity(int size);
+		static Matrix identity();
 		static Matrix translation(float x, float y, float z);
 		static Matrix scaling(float x, float y, float z);
-		static Matrix rotationX(float r);
-		static Matrix rotationY(float r);
-		static Matrix rotationZ(float r);
+		static Matrix rotation_x(float r);
+		static Matrix rotation_y(float r);
+		static Matrix rotation_z(float r);
 		static Matrix shearing(float xy, float xz, float yx, float yz, float zx, float zy);
+		static Matrix view_transform(Tuple from, Tuple to, Tuple up);
 
 		Matrix transpose() const;
-		float determinant() const;
-		Matrix submatrix(int row, int col) const;
-		float minor(int row, int col) const;
-		float cofactor(int row, int col) const;
-		bool isInvertible() const;
 		Matrix inverse() const;
 
-	private:
-			
-		int width;
-		int height;
-		float **matrix;
-		Matrix();
-
+		float _m[4][4];
+		int _dim;
 };
-
-std::ostream &operator<<(std::ostream &o, Matrix const &i);

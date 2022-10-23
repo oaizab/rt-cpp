@@ -1,196 +1,99 @@
 #include "Tuple.hpp"
 #include "utils.hpp"
 #include <cmath>
-#include <iomanip>
 
-Tuple::Tuple()
+Tuple::Tuple() : x(0), y(0), z(0), w(0)
 {
-	_x = 0;
-	_y = 0;
-	_z = 0;
-	_w = 0;
 }
 
-Tuple::Tuple(const Tuple &src)
+Tuple::Tuple(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 {
-	*this = src;
 }
 
-Tuple::~Tuple()
+Tuple::Tuple(Tuple const &t) : x(t.x), y(t.y), z(t.z), w(t.w)
 {
 }
 
 Tuple &Tuple::operator=(Tuple const &rhs)
 {
-	if (this != &rhs)
-	{
-		_x = rhs._x;
-		_y = rhs._y;
-		_z = rhs._z;
-		_w = rhs._w;
-	}
+	x = rhs.x;
+	y = rhs.y;
+	z = rhs.z;
+	w = rhs.w;
 	return *this;
 }
 
-std::ostream &operator<<(std::ostream &o, Tuple const &i)
+bool Tuple::operator==(Tuple const &t) const
 {
-	o << "Tuple(" << std::fixed << std::setprecision(5) << i.getX() << ", " << i.getY() << ", " << i.getZ() << ", " << i.getW() << ")";
-	return o;
+	return feq(x, t.x) && feq(y, t.y) && feq(z, t.z) && feq(w, t.w);
 }
 
-Tuple::Tuple(float x, float y, float z, float w)
+bool Tuple::operator!=(Tuple const &t) const
 {
-	_x = x;
-	_y = y;
-	_z = z;
-	_w = w;
+	return !(*this == t);
 }
 
-bool Tuple::operator==(Tuple const &rhs) const
+Tuple Tuple::operator+(Tuple const &t) const
 {
-	return (feq(_x, rhs._x) && feq(_y, rhs._y) && feq(_z, rhs._z) && feq(_w, rhs._w));
+	return Tuple(x + t.x, y + t.y, z + t.z, w + t.w);
 }
 
-Tuple Tuple::operator+(Tuple const &rhs) const
+Tuple Tuple::operator-(Tuple const &t) const
 {
-	Tuple t;
-	t._x = _x + rhs._x;
-	t._y = _y + rhs._y;
-	t._z = _z + rhs._z;
-	t._w = _w + rhs._w;
-	if (feq(t._w, 2))
-		t._w = 1;
-	return t;
-}
-
-Tuple Tuple::operator-(Tuple const &rhs) const
-{
-	Tuple t;
-	t._x = _x - rhs._x;
-	t._y = _y - rhs._y;
-	t._z = _z - rhs._z;
-	t._w = _w - rhs._w;
-	if (feq(t._w, -1))
-		t._w = 1;
-	return t;
+	return Tuple(x - t.x, y - t.y, z - t.z, w - t.w);
 }
 
 Tuple Tuple::operator-() const
 {
-	Tuple t;
-	t._x = -_x;
-	t._y = -_y;
-	t._z = -_z;
-	t._w = -_w;
-	return t;
+	return Tuple(-x, -y, -z, -w);
 }
 
-Tuple Tuple::operator*(float const &rhs) const
+Tuple Tuple::operator*(float f) const
 {
-	Tuple t;
-	t._x = _x * rhs;
-	t._y = _y * rhs;
-	t._z = _z * rhs;
-	t._w = _w * rhs;
-	return t;
+	return Tuple(x * f, y * f, z * f, w * f);
 }
 
-Tuple Tuple::operator/(float const &rhs) const
+Tuple Tuple::operator/(float f) const
 {
-	Tuple t;
-	t._x = _x / rhs;
-	t._y = _y / rhs;
-	t._z = _z / rhs;
-	t._w = _w / rhs;
-	return t;
+	return Tuple(x / f, y / f, z / f, w / f);
+}
+
+float Tuple::operator*(Tuple const &t) const
+{
+	return x * t.x + y * t.y + z * t.z + w * t.w;
 }
 
 float Tuple::magnitude() const
 {
-	return sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
+	return sqrt(x * x + y * y + z * z + w * w);
 }
 
 Tuple Tuple::normalize() const
 {
-	float mag = magnitude();
-	Tuple t;
-	t._x = _x / mag;
-	t._y = _y / mag;
-	t._z = _z / mag;
-	t._w = _w / mag;
-	return t;
+	return *this / magnitude();
 }
 
-float Tuple::dot(Tuple const &rhs) const
+float Tuple::dot(Tuple const &t) const
 {
-	return _x * rhs._x + _y * rhs._y + _z * rhs._z + _w * rhs._w;
+	return *this * t;
 }
 
-Tuple Tuple::cross(Tuple const &rhs) const
+Tuple Tuple::cross(Tuple const &t) const
 {
-	Tuple t;
-	t._x = _y * rhs._z - _z * rhs._y;
-	t._y = _z * rhs._x - _x * rhs._z;
-	t._z = _x * rhs._y - _y * rhs._x;
-	t._w = 0;
-	return t;
-}
-
-float Tuple::getX() const
-{
-	return _x;
-}
-
-float Tuple::getY() const
-{
-	return _y;
-}
-
-float Tuple::getZ() const
-{
-	return _z;
-}
-
-float Tuple::getW() const
-{
-	return _w;
-}
-
-void Tuple::setX(float x)
-{
-	_x = x;
-}
-
-void Tuple::setY(float y)
-{
-	_y = y;
-}
-
-void Tuple::setZ(float z)
-{
-	_z = z;
-}
-
-void Tuple::setW(float w)
-{
-	_w = w;
-}
-
-Tuple Tuple::point(float x, float y, float z)
-{
-	Tuple t(x, y, z, 1);
-	return t;
-}
-
-Tuple Tuple::vector(float x, float y, float z)
-{
-	Tuple t(x, y, z, 0);
-	return t;
+	return Tuple(y * t.z - z * t.y, z * t.x - x * t.z, x * t.y - y * t.x, 0);
 }
 
 Tuple Tuple::reflect(Tuple const &normal) const
 {
-	Tuple t;
-	t = *this - normal * 2 * this->dot(normal);
-	return t;
+	return *this - normal * 2 * (*this * normal);
+}
+
+Tuple Tuple::point(float x, float y, float z)
+{
+	return Tuple(x, y, z, 1);
+}
+
+Tuple Tuple::vector(float x, float y, float z)
+{
+	return Tuple(x, y, z, 0);
 }

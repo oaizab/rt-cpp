@@ -1,58 +1,41 @@
 #include "Light.hpp"
+#include <iostream>
 
-Light::Light()
+Light::Light(): position(Tuple::point(0, 0, 0)), color(Color(1, 1, 1)), ratio(1), intensity(Color(1, 1, 1))
 {
-	_position = Tuple::point(0, 0, 0);
-	_intensity = Color(1, 1, 1);
 }
 
-Light::Light(Tuple const position, Color const intensity)
+Light::Light(Tuple position, Color intensity):
+	position(position), color(intensity), ratio(1), intensity(intensity)
 {
-	_position = position;
-	_intensity = intensity;
 }
 
-Light::Light(const Light &src)
+Light::Light(Tuple position, Color color, float ratio):
+	position(position), color(color), ratio(ratio), intensity(color * ratio)
 {
-	*this = src;
+}
+
+Light::Light(const Light &l):
+	position(l.position), color(l.color), ratio(l.ratio), intensity(l.intensity)
+{
 }
 
 Light::~Light()
 {
 }
 
-Light &Light::operator=(Light const &rhs)
+Light &Light::operator=(const Light &l)
 {
-	if (this != &rhs)
-	{
-		_position = rhs._position;
-		_intensity = rhs._intensity;
-	}
+	position = l.position;
+	intensity = l.intensity;
+	ratio = l.ratio;
+	color = l.color;
 	return *this;
 }
 
-std::ostream &operator<<(std::ostream &o, Light const &i)
+Light &Light::setRatio(float ratio)
 {
-	o << "Light(" << i.getPosition() << ", " << i.getIntensity() << ")";
-	return o;
-}
-
-Tuple Light::getPosition() const
-{
-	return _position;
-}
-
-Color Light::getIntensity() const
-{
-	return _intensity;
-}
-
-void Light::setPosition(Tuple const &position)
-{
-	_position = position;
-}
-
-void Light::setIntensity(Color const &intensity)
-{
-	_intensity = intensity;
+	this->ratio = ratio;
+	intensity = color * ratio;
+	return *this;
 }

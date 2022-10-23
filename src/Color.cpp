@@ -1,121 +1,99 @@
 #include "Color.hpp"
 
-Color::Color()
+Color Color::black = Color(0, 0, 0);
+Color Color::white = Color(1, 1, 1);
+Color Color::red = Color(1, 0, 0);
+Color Color::green = Color(0, 1, 0);
+Color Color::blue = Color(0, 0, 1);
+
+Color::Color() : r(0), g(0), b(0)
 {
-	this->red = 0;
-	this->green = 0;
-	this->blue = 0;
 }
 
-Color::Color(const Color &src)
+Color::Color(float r, float g, float b) : r(r), g(g), b(b)
 {
-	*this = src;
 }
 
-Color::~Color()
+Color::Color(Color const &src) : r(src.r), g(src.g), b(src.b)
 {
 }
 
 Color &Color::operator=(Color const &rhs)
 {
-	if (this != &rhs)
-	{
-		this->red = rhs.getRed();
-		this->green = rhs.getGreen();
-		this->blue = rhs.getBlue();
-	}
+	r = rhs.r;
+	g = rhs.g;
+	b = rhs.b;
 	return *this;
 }
 
-std::ostream &operator<<(std::ostream &o, Color const &i)
+int Color::r255() const
 {
-	o << "Color(" << i.getRed() << ", " << i.getGreen() << ", " << i.getBlue() << ")";
-	return o;
+	int ret = r * 255.999;
+	if (ret > 255)
+		ret = 255;
+	if (ret < 0)
+		ret = 0;
+	return ret;
 }
 
-Color::Color(float r, float g, float b)
+int Color::g255() const
 {
-	this->red = r;
-	this->green = g;
-	this->blue = b;
+	int ret = g * 255.999;
+	if (ret > 255)
+		ret = 255;
+	if (ret < 0)
+		ret = 0;
+	return ret;
 }
 
-float Color::getRed() const
+int Color::b255() const
 {
-	return this->red;
+	int ret = b * 255.999;
+	if (ret > 255)
+		ret = 255;
+	if (ret < 0)
+		ret = 0;
+	return ret;
 }
 
-float Color::getGreen() const
+Color Color::operator+(Color const &c) const
 {
-	return this->green;
+	return Color(r + c.r, g + c.g, b + c.b);
 }
 
-float Color::getBlue() const
+Color Color::operator-(Color const &c) const
 {
-	return this->blue;
+	return Color(r - c.r, g - c.g, b - c.b);
 }
 
-int Color::getRed255() const
+Color Color::operator*(Color const &c) const
 {
-	int r = this->red * 255.999;
-	if (r > 255)
-		r = 255;
+	return Color(r * c.r, g * c.g, b * c.b);
+}
+
+Color Color::operator*(float const &f) const
+{
+	return Color(r * f, g * f, b * f);
+}
+
+Color Color::normalize()
+{
+	if (r > 1)
+		r = 1;
+	if (g > 1)
+		g = 1;
+	if (b > 1)
+		b = 1;
 	if (r < 0)
 		r = 0;
-	return r;
-}
-
-int Color::getGreen255() const
-{
-	int g = this->green * 255.999;
-	if (g > 255)
-		g = 255;
 	if (g < 0)
 		g = 0;
-	return g;
-}
-
-int Color::getBlue255() const
-{
-	int b = this->blue * 255.999;
-	if (b > 255)
-		b = 255;
 	if (b < 0)
 		b = 0;
-	return b;
+	return *this;
 }
 
-void Color::setRed(float r)
+Color Color::add(Color const &c) const
 {
-	this->red = r;
-}
-
-void Color::setGreen(float g)
-{
-	this->green = g;
-}
-
-void Color::setBlue(float b)
-{
-	this->blue = b;
-}
-
-Color Color::operator+(Color const &rhs) const
-{
-	return Color(this->red + rhs.getRed(), this->green + rhs.getGreen(), this->blue + rhs.getBlue());
-}
-
-Color Color::operator-(Color const &rhs) const
-{
-	return Color(this->red - rhs.getRed(), this->green - rhs.getGreen(), this->blue - rhs.getBlue());
-}
-
-Color Color::operator*(Color const &rhs) const
-{
-	return Color(this->red * rhs.getRed(), this->green * rhs.getGreen(), this->blue * rhs.getBlue());
-}
-
-Color Color::operator*(float const &rhs) const
-{
-	return Color(this->red * rhs, this->green * rhs, this->blue * rhs);
+	return Color(std::max(r, c.r), std::max(g, c.g), std::max(b, c.b));
 }

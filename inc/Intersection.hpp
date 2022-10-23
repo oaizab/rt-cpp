@@ -1,35 +1,16 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include "Sphere.hpp"
-
-class Sphere;
+#include "Shape.hpp"
+#include "Computation.hpp"
 
 class Intersection
 {
-
 	public:
-
-		Intersection(float t, Sphere const &sphere);
+		Intersection(float t, Shape *shape);
+		Intersection(float t, Shape &shape);
 		Intersection(Intersection const &src);
-		~Intersection();
 
-		Intersection &operator=(Intersection const &rhs);
-		float getT() const;
-		Sphere getObject() const;
-
-		bool operator==(Intersection const &rhs) const;
-		bool operator!=(Intersection const &rhs) const;
-
-		static Intersection nothing();
-
-	private:
-	
-		float _t;
-		Sphere _object;
-		Intersection();
-
+		Computation prepareComputation(Ray const &ray);
+		Shape* object;
+		float t;
 };
-
-std::ostream &operator<<(std::ostream &o, Intersection const &i);

@@ -1,33 +1,21 @@
 #pragma once
 
-#include <iostream>
-#include <string>
 #include "Tuple.hpp"
 #include "Color.hpp"
 
 class Light
 {
-
 	public:
-
 		Light();
-		Light(Tuple const position, Color const intensity);
-		Light(Light const &src);
+		Light(Tuple position, Color intensity);
+		Light(Tuple position, Color color, float ratio);
+		Light(const Light &l);
 		~Light();
+		Light &operator=(const Light &l);
+		Light &setRatio(float ratio);
 
-		Tuple getPosition() const;
-		Color getIntensity() const;
-
-		void setPosition(Tuple const &position);
-		void setIntensity(Color const &intensity);
-
-		Light &operator=(Light const &rhs);
-
-	private:
-	
-		Tuple _position;
-		Color _intensity;
-
+		Tuple position;
+		Color color;
+		float ratio;
+		Color intensity;
 };
-
-std::ostream &operator<<(std::ostream &o, Light const &i);

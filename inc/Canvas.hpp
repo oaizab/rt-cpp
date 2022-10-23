@@ -1,35 +1,26 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 #include "Color.hpp"
 
 class Canvas
 {
-
 	public:
-
+		Canvas();
 		Canvas(int width, int height);
 		Canvas(Canvas const &src);
-		~Canvas();
+		~Canvas() = default;
 
 		Canvas &operator=(Canvas const &rhs);
 
-		void writePixel(int x, int y, Color color);
-		void saveToPPM(std::string filename);
-		void writePixelCentered(int x, int y, Color color);
-		Color getPixel(int x, int y);
-
-		int getWidth() const;
-		int getHeight() const;
+		int width() const;
+		int height() const;
+		Color pixel_at(int x, int y) const;
+		void write_pixel(int x, int y, Color const &c);
+		void save_to_ppm(std::string const &filename) const;
 
 	private:
-			
-		int width;
-		int height;
-		Color **pixels;
-		Canvas();
-
+		int _width;
+		int _height;
+		Color **_pixels;
 };
-
-std::ostream &operator<<(std::ostream &o, Canvas const &i);

@@ -1,16 +1,16 @@
 #include "Intersections.hpp"
 
-Intersections::Intersections()
+Intersections::Intersections(): count(0)
 {
 }
 
-Intersections::Intersections(Intersection const &i1, Intersection const &i2)
+Intersections::Intersections(Intersection const &i1, Intersection const &i2): count(2)
 {
-	_intersections.push_back(i1);
-	_intersections.push_back(i2);
+	intersections.push_back(i1);
+	intersections.push_back(i2);
 }
 
-Intersections::Intersections(const Intersections &src)
+Intersections::Intersections(Intersection const &src)
 {
 	*this = src;
 }
@@ -19,66 +19,37 @@ Intersections::~Intersections()
 {
 }
 
-Intersections &Intersections::operator=(Intersections const &rhs)
-{
-	if (this != &rhs)
-	{
-		_intersections = rhs._intersections;
-	}
-	return *this;
-}
-
-std::ostream &operator<<(std::ostream &o, Intersections const &i)
-{
-	o << "Intersections " << i.getCount();
-	for (int j = 0; j < i.getCount(); j++)
-	{
-		o << " " << i[j];
-	}
-	return o;
-}
-
-Intersection Intersections::operator[](int i) const
-{
-	if (i < 0 || i >= getCount())
-	{
-		throw std::out_of_range("Intersections::operator[]");
-	}
-	return _intersections[i];
-}
-
 Intersection &Intersections::operator[](int i)
 {
-	if (i < 0 || i >= getCount())
-	{
-		throw std::out_of_range("Intersections::operator[]");
-	}
-	return _intersections[i];
+	return intersections[i];
 }
 
 void Intersections::add(Intersection const &i)
 {
-	_intersections.push_back(i);
+	intersections.push_back(i);
+	count++;
 }
 
-int Intersections::getCount() const
+void Intersections::add(Intersections const &i)
 {
-	return _intersections.size();
-}
-
-Intersection Intersections::hit() const
-{
-	int ret = -1;
-	for (int i = 0; i < getCount(); i++)
+	for (int j = 0; j < i.count; j++)
 	{
-		if (_intersections[i].getT() >= 0 && (ret == -1 || _intersections[i].getT() < _intersections[ret].getT()))
+		intersections.push_back(i.intersections[j]);
+		count++;
+	}
+}
+
+Intersection *Intersections::hit()
+{
+	Intersection *hit = NULL;
+	float min = -1;
+	for (int i = 0; i < count; i++)
+	{
+		if (intersections[i].t > 0 && (min < 0 || intersections[i].t < min))
 		{
-			ret = i;
+			min = intersections[i].t;
+			hit = &intersections[i];
 		}
 	}
-	if (ret == -1)
-	{
-		return Intersection::nothing();
-	}
-	return _intersections[ret];
+	return hit;
 }

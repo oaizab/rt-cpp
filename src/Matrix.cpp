@@ -1,284 +1,224 @@
 #include "Matrix.hpp"
 #include "utils.hpp"
-#include <stdexcept>
 #include <cmath>
-#include <iomanip>
+#include <algorithm>
+#include <utility>
+#include <cstdlib>
 
-Matrix::Matrix()
+Matrix::Matrix() : _dim(4)
 {
-	width = 0;
-	height = 0;
-	matrix = NULL;
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			_m[i][j] = 0;
 }
 
-Matrix::Matrix(int rows, int cols)
+Matrix::Matrix(int dim) : _dim(dim)
 {
-	width = cols;
-	height = rows;
-	matrix = new float*[height];
-	for (int i = 0; i < height; i++)
-	{
-		matrix[i] = new float[width];
-		for (int j = 0; j < width; j++)
-			matrix[i][j] = 0;
-	}
+	for (int i = 0; i < dim; i++)
+		for (int j = 0; j < dim; j++)
+			_m[i][j] = 0;
 }
 
-Matrix::Matrix(int dim) : Matrix(dim, dim)
+Matrix::Matrix(Matrix const &src) : _dim(src._dim)
 {
-}
-
-Matrix::Matrix(int dim, float values[])
-{
-	width = dim;
-	height = dim;
-	matrix = new float*[height];
-	for (int i = 0; i < height; i++)
-	{
-		matrix[i] = new float[width];
-		for (int j = 0; j < width; j++)
-			matrix[i][j] = values[i * width + j];
-	}
-}
-
-Matrix::Matrix(const Matrix &src)
-{
-	width = src.width;
-	height = src.height;
-	matrix = new float*[height];
-	for (int i = 0; i < height; i++)
-	{
-		matrix[i] = new float[width];
-		for (int j = 0; j < width; j++)
-			matrix[i][j] = src.matrix[i][j];
-	}
-}
-
-Matrix::~Matrix()
-{
-	for (int i = 0; i < height; i++)
-		delete[] matrix[i];
-	delete[] matrix;
+	for (int i = 0; i < _dim; i++)
+		for (int j = 0; j < _dim; j++)
+			_m[i][j] = src._m[i][j];
 }
 
 Matrix &Matrix::operator=(Matrix const &rhs)
 {
 	if (this != &rhs)
 	{
-		for (int i = 0; i < height; i++)
-			delete[] matrix[i];
-		delete[] matrix;
-		width = rhs.width;
-		height = rhs.height;
-		matrix = new float*[height];
-		for (int i = 0; i < height; i++)
-		{
-			matrix[i] = new float[width];
-			for (int j = 0; j < width; j++)
-				matrix[i][j] = rhs.matrix[i][j];
-		}
+		_dim = rhs._dim;
+		for (int i = 0; i < _dim; i++)
+			for (int j = 0; j < _dim; j++)
+				_m[i][j] = rhs._m[i][j];
 	}
 	return *this;
 }
 
-std::ostream &operator<<(std::ostream &o, Matrix const &i)
+bool Matrix::operator==(Matrix const &m) const
 {
-	o << "Matrix(" << i.getWidth() << ", " << i.getHeight() << ")";
-	for (int j = 0; j < i.getHeight(); j++)
-	{
-		o << '\n';
-		for (int k = 0; k < i.getWidth(); k++)
-			o << std::fixed << std::setprecision(5) << i(j, k) << " ";
-	}
-	return o;
-}
-
-bool Matrix::operator==(Matrix const &rhs) const
-{
-	if (this->width != rhs.width || this->height != rhs.height)
+	if (_dim != m._dim)
 		return false;
-	for (int i = 0; i < this->height; i++)
-		for (int j = 0; j < this->width; j++)
-			if (feq(this->matrix[i][j], rhs.matrix[i][j]) == false)
+	for (int i = 0; i < _dim; i++)
+		for (int j = 0; j < _dim; j++)
+			if (!feq(_m[i][j], m._m[i][j]))
 				return false;
 	return true;
 }
 
-bool Matrix::operator!=(Matrix const &rhs) const
+bool Matrix::operator!=(Matrix const &m) const
 {
-	return !(*this == rhs);
+	return !(*this == m);
 }
 
-Matrix Matrix::operator*(Matrix const &rhs) const
+Matrix Matrix::operator*(Matrix const &m) const
 {
-	if (this->width != rhs.height)
-		throw std::invalid_argument("Matrix::operator*(): invalid dimensions");
-	Matrix result(this->height, rhs.width);
-	for (int i = 0; i < result.height; i++)
-		for (int j = 0; j < result.width; j++)
-			for (int k = 0; k < this->width; k++)
-				result(i, j) += this->matrix[i][k] * rhs.matrix[k][j];
-	return result;
+	Matrix res(_dim);
+	for (int i = 0; i < _dim; i++)
+		for (int j = 0; j < _dim; j++)
+			for (int k = 0; k < _dim; k++)
+				res._m[i][j] += _m[i][k] * m._m[k][j];
+	return res;
 }
 
-Tuple Matrix::operator*(Tuple const &rhs) const
+Tuple Matrix::operator*(Tuple const &t) const
 {
-	if (this->width != 4 || this->height != 4)
-		throw std::invalid_argument("Matrix::operator*(): invalid dimensions");
-	Tuple t[4];
+	Tuple res[4];
 	for (int i = 0; i < 4; i++)
-		t[i] = Tuple(this->matrix[i][0], this->matrix[i][1], this->matrix[i][2], this->matrix[i][3]);
-	return Tuple(t[0].dot(rhs), t[1].dot(rhs), t[2].dot(rhs), t[3].dot(rhs));
-}
-
-float Matrix::operator()(int row, int col) const
-{
-	if (row < 0 || row >= height || col < 0 || col >= width)
-		throw std::invalid_argument("Matrix::operator(): invalid index");
-	return matrix[row][col];
-}
-
-float &Matrix::operator()(int row, int col)
-{
-	if (row < 0 || row >= height || col < 0 || col >= width)
-		throw std::invalid_argument("Matrix::operator(): invalid index");
-	return matrix[row][col];
+		res[i] = Tuple(_m[i][0], _m[i][1], _m[i][2], _m[i][3]);
+	return Tuple(res[0] * t, res[1] * t, res[2] * t, res[3] * t);
 }
 
 Matrix Matrix::transpose() const
 {
-	Matrix result(this->width, this->height);
-	for (int i = 0; i < this->height; i++)
-		for (int j = 0; j < this->width; j++)
-			result(j, i) = this->matrix[i][j];
-	return result;
-}
-
-float Matrix::determinant() const
-{
-	if (this->width != this->height)
-		throw std::invalid_argument("Matrix::determinant(): invalid dimensions");
-	if (this->width == 2)
-		return this->matrix[0][0] * this->matrix[1][1] - this->matrix[0][1] * this->matrix[1][0];
-	float result = 0;
-	for (int i = 0; i < this->width; i++)
-		result += this->matrix[0][i] * this->cofactor(0, i);
-	return result;
-}
-
-Matrix Matrix::submatrix(int row, int col) const
-{
-	if (row < 0 || row >= this->height || col < 0 || col >= this->width)
-		throw std::invalid_argument("Matrix::submatrix(): invalid index");
-	Matrix result(this->height - 1, this->width - 1);
-	for (int i = 0; i < this->height; i++)
-		for (int j = 0; j < this->width; j++)
-			if (i != row && j != col)
-				result(i < row ? i : i - 1, j < col ? j : j - 1) = this->matrix[i][j];
-	return result;
-}
-
-float Matrix::minor(int row, int col) const
-{
-	return this->submatrix(row, col).determinant();
-}
-
-float Matrix::cofactor(int row, int col) const
-{
-	return (row + col) % 2 == 0 ? this->minor(row, col) : -this->minor(row, col);
-}
-
-bool Matrix::isInvertible() const
-{
-	return this->determinant() != 0;
+	Matrix res(_dim);
+	for (int i = 0; i < _dim; i++)
+		for (int j = 0; j < _dim; j++)
+			res._m[i][j] = _m[j][i];
+	return res;
 }
 
 Matrix Matrix::inverse() const
 {
-	if (this->isInvertible() == false)
-		throw std::invalid_argument("Matrix::inverse(): matrix is not invertible");
-	float det = this->determinant();
-	Matrix result(this->height, this->width);
-	for (int i = 0; i < this->height; i++)
-		for (int j = 0; j < this->width; j++)
-			result(j, i) = this->cofactor(i, j) / det;
-	return result;
+	Matrix m = *this;
+	Matrix res = identity();
+	for (int col = 0; col < 4; col++)
+	{
+		if (feq(m._m[col][col], 0))
+		{
+			int big = col;
+			for (int row = 0; row < 4; row++)
+				if (fabs(m._m[row][col]) > fabs(m._m[big][col]))
+					big = row;
+				if (big == col)
+					return *this;
+				else
+				{
+					for (int j = 0; j < 4; j++)
+					{
+						// std::swap(m._m[col][j], m._m[big][j]);
+						// std::swap(res._m[col][j], res._m[big][j]);
+						float tmp = m._m[col][j];
+						m._m[col][j] = m._m[big][j];
+						m._m[big][j] = tmp;
+						tmp = res._m[col][j];
+						res._m[col][j] = res._m[big][j];
+						res._m[big][j] = tmp;
+					}
+				}
+		}
+		for (int row = 0; row < 4; row++)
+		{
+			if (row == col)
+				continue;
+			float coeff = m._m[row][col] / m._m[col][col];
+			if (!feq(coeff, 0))
+			{
+				for (int k = 0; k < 4; k++)
+				{
+					m._m[row][k] -= coeff * m._m[col][k];
+					res._m[row][k] -= coeff * res._m[col][k];
+				}
+				m._m[row][col] = 0;
+			}
+		}
+	}
+	for (int row = 0; row < 4; row++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			res._m[row][col] /= m._m[row][row];
+		}
+	}
+	return res;
 }
 
-Matrix Matrix::identity(int size)
+Matrix Matrix::identity()
 {
-	Matrix result(size, size);
-	for (int i = 0; i < size; i++)
-		result(i, i) = 1;
-	return result;
+	Matrix res;
+	for (int i = 0; i < 4; i++)
+		res._m[i][i] = 1;
+	return res;
 }
 
 Matrix Matrix::translation(float x, float y, float z)
 {
-	Matrix result = Matrix::identity(4);
-	result(0, 3) = x;
-	result(1, 3) = y;
-	result(2, 3) = z;
-	return result;
+	Matrix res = identity();
+	res._m[0][3] = x;
+	res._m[1][3] = y;
+	res._m[2][3] = z;
+	return res;
 }
 
 Matrix Matrix::scaling(float x, float y, float z)
 {
-	Matrix result = Matrix::identity(4);
-	result(0, 0) = x;
-	result(1, 1) = y;
-	result(2, 2) = z;
-	return result;
+	Matrix res = identity();
+	res._m[0][0] = x;
+	res._m[1][1] = y;
+	res._m[2][2] = z;
+	return res;
 }
 
-Matrix Matrix::rotationX(float r)
+Matrix Matrix::rotation_x(float r)
 {
-	Matrix result = Matrix::identity(4);
-	result(1, 1) = cos(r);
-	result(1, 2) = -sin(r);
-	result(2, 1) = sin(r);
-	result(2, 2) = cos(r);
-	return result;
+	Matrix res = identity();
+	res._m[1][1] = cos(r);
+	res._m[1][2] = -sin(r);
+	res._m[2][1] = sin(r);
+	res._m[2][2] = cos(r);
+	return res;
 }
 
-Matrix Matrix::rotationY(float r)
+Matrix Matrix::rotation_y(float r)
 {
-	Matrix result = Matrix::identity(4);
-	result(0, 0) = cos(r);
-	result(0, 2) = sin(r);
-	result(2, 0) = -sin(r);
-	result(2, 2) = cos(r);
-	return result;
+	Matrix res = identity();
+	res._m[0][0] = cos(r);
+	res._m[0][2] = sin(r);
+	res._m[2][0] = -sin(r);
+	res._m[2][2] = cos(r);
+	return res;
 }
 
-Matrix Matrix::rotationZ(float r)
+Matrix Matrix::rotation_z(float r)
 {
-	Matrix result = Matrix::identity(4);
-	result(0, 0) = cos(r);
-	result(0, 1) = -sin(r);
-	result(1, 0) = sin(r);
-	result(1, 1) = cos(r);
-	return result;
+	Matrix res = identity();
+	res._m[0][0] = cos(r);
+	res._m[0][1] = -sin(r);
+	res._m[1][0] = sin(r);
+	res._m[1][1] = cos(r);
+	return res;
 }
 
 Matrix Matrix::shearing(float xy, float xz, float yx, float yz, float zx, float zy)
 {
-	Matrix result = Matrix::identity(4);
-	result(0, 1) = xy;
-	result(0, 2) = xz;
-	result(1, 0) = yx;
-	result(1, 2) = yz;
-	result(2, 0) = zx;
-	result(2, 1) = zy;
-	return result;
+	Matrix res = identity();
+	res._m[0][1] = xy;
+	res._m[0][2] = xz;
+	res._m[1][0] = yx;
+	res._m[1][2] = yz;
+	res._m[2][0] = zx;
+	res._m[2][1] = zy;
+	return res;
 }
 
-int Matrix::getWidth() const
+Matrix Matrix::view_transform(Tuple from, Tuple to, Tuple up)
 {
-	return this->width;
-}
-
-int Matrix::getHeight() const
-{
-	return this->height;
+	Tuple forward = (to - from).normalize();
+	Tuple upn = up.normalize();
+	Tuple left = forward.cross(upn);
+	Tuple true_up = left.cross(forward);
+	Matrix orientation = Matrix::identity();
+	orientation._m[0][0] = left.x;
+	orientation._m[0][1] = left.y;
+	orientation._m[0][2] = left.z;
+	orientation._m[1][0] = true_up.x;
+	orientation._m[1][1] = true_up.y;
+	orientation._m[1][2] = true_up.z;
+	orientation._m[2][0] = -forward.x;
+	orientation._m[2][1] = -forward.y;
+	orientation._m[2][2] = -forward.z;
+	return orientation * translation(-from.x, -from.y, -from.z);
 }

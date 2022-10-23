@@ -1,36 +1,24 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <vector>
 #include "Intersection.hpp"
+#include <vector>
 
 class Intersection;
 
 class Intersections
 {
-
 	public:
-
 		Intersections();
 		Intersections(Intersection const &i1, Intersection const &i2);
-		Intersections(Intersections const &src);
+		Intersections(Intersection const &src);
 		~Intersections();
 
-		Intersections &operator=(Intersections const &rhs);
-		Intersection operator[](int i) const;
+
 		Intersection &operator[](int i);
-
 		void add(Intersection const &i);
+		void add(Intersections const &i);
+		Intersection *hit();
 
-		int getCount() const;
-		
-		Intersection hit() const;
-
-	private:
-	
-		std::vector<Intersection> _intersections;
-
+		int count;
+		std::vector<Intersection> intersections;
 };
-
-std::ostream &operator<<(std::ostream &o, Intersections const &i);

@@ -1,103 +1,86 @@
 #include "Canvas.hpp"
 #include <fstream>
 
-Canvas::Canvas()
+Canvas::Canvas() : _width(0), _height(0), _pixels(nullptr)
 {
-	width = 0;
-	height = 0;
-	pixels = NULL;
 }
 
-Canvas::Canvas(const Canvas &src)
+Canvas::Canvas(int width, int height) : _width(width), _height(height), _pixels(new Color*[height])
 {
-	*this = src;
+	for (int i = 0; i < height; i++)
+	{
+		_pixels[i] = new Color[width];
+		for (int j = 0; j < width; j++)
+			_pixels[i][j] = Color::black;
+	}
 }
 
-Canvas::~Canvas()
+Canvas::Canvas(Canvas const &src) : _width(src._width), _height(src._height), _pixels(new Color*[src._height])
 {
-	for (int i = 0; i < this->height; i++)
-		delete[] this->pixels[i];
+	for (int i = 0; i < src._height; i++)
+	{
+		_pixels[i] = new Color[src._width];
+		for (int j = 0; j < src._width; j++)
+			_pixels[i][j] = src._pixels[i][j];
+	}
 }
 
 Canvas &Canvas::operator=(Canvas const &rhs)
 {
 	if (this != &rhs)
 	{
-		for (int i = 0; i < this->height; i++)
-			delete[] this->pixels[i];
-		delete[] this->pixels;
-		this->width = rhs.width;
-		this->height = rhs.height;
-		this->pixels = new Color*[this->height];
-		for (int i = 0; i < this->height; i++)
+		for (int i = 0; i < _height; i++)
+			delete[] _pixels[i];
+		delete[] _pixels;
+		_width = rhs._width;
+		_height = rhs._height;
+		_pixels = new Color*[_height];
+		for (int i = 0; i < _height; i++)
 		{
-			this->pixels[i] = new Color[this->width];
-			for (int j = 0; j < this->width; j++)
-				this->pixels[i][j] = rhs.pixels[i][j];
+			_pixels[i] = new Color[_width];
+			for (int j = 0; j < _width; j++)
+				_pixels[i][j] = rhs._pixels[i][j];
 		}
 	}
 	return *this;
 }
 
-std::ostream &operator<<(std::ostream &o, Canvas const &i)
+int Canvas::width() const
 {
-	o << "Canvas(" << i.getWidth() << ", " << i.getHeight() << ")";
-	return o;
+	return _width;
 }
 
-Canvas::Canvas(int width, int height)
+int Canvas::height() const
 {
-	this->width = width;
-	this->height = height;
-	this->pixels = new Color*[this->height];
-	for (int i = 0; i < this->height; i++)
-	{
-		this->pixels[i] = new Color[this->width];
-		for (int j = 0; j < this->width; j++)
-			this->pixels[i][j] = Color(0, 0, 0);
-	}
+	return _height;
 }
 
-void Canvas::writePixel(int x, int y, Color color)
+Color Canvas::pixel_at(int x, int y) const
 {
-	if (x < 0 || x >= this->width || y < 0 || y >= this->height)
+	if (x < 0 || x >= _width || y < 0 || y >= _height)
+		return Color::black;
+	return _pixels[y][x];
+}
+
+void Canvas::write_pixel(int x, int y, Color const &c)
+{
+	if (x < 0 || x >= _width || y < 0 || y >= _height)
 		return;
-	this->pixels[y][x] = color;
+	_pixels[y][x] = c;
 }
 
-void Canvas::writePixelCentered(int x, int y, Color color)
-{
-	this->writePixel(x + this->width / 2, this->height / 2 - y, color);
-}
-
-Color Canvas::getPixel(int x, int y)
-{
-	if (x < 0 || x >= this->width || y < 0 || y >= this->height)
-		return Color(0, 0, 0);
-	return this->pixels[y][x];
-}
-
-int Canvas::getWidth() const
-{
-	return this->width;
-}
-
-int Canvas::getHeight() const
-{
-	return this->height;
-}
-
-void Canvas::saveToPPM(std::string filename)
+void Canvas::save_to_ppm(std::string const &filename) const
 {
 	std::ofstream file;
 	file.open(filename);
-	file << "P3\n" << this->width << " " << this->height << "\n255\n";
-	for (int i = 0; i < this->height; i++)
+	file << "P3\n" << _width << " " << _height << "\n255\n";
+	for (int i = 0; i < _height; i++)
 	{
-		for (int j = 0; j < this->width; j++)
+		for (int j = 0; j < _width; j++)
 		{
-			file << this->pixels[i][j].getRed255() << " " << this->pixels[i][j].getGreen255() << " " << this->pixels[i][j].getBlue255() << " ";
+			file << _pixels[i][j].r255() << " " << _pixels[i][j].g255() << " " << _pixels[i][j].b255() << " ";
 		}
 		file << "\n";
 	}
+	file.close();
 }

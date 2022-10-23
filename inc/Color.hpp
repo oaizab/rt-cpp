@@ -1,43 +1,39 @@
 #pragma once
 
-#include <iostream>
-#include <string>
+#include <algorithm>
 
 class Color
 {
-
 	public:
-
 		Color();
 		Color(Color const &src);
-		~Color();
+		~Color() = default;
 		Color(float r, float g, float b);
 
 		Color &operator=(Color const &rhs);
 
-		float getRed() const;
-		float getGreen() const;
-		float getBlue() const;
+		int r255() const;
+		int g255() const;
+		int b255() const;
 
-		int getRed255() const;
-		int getGreen255() const;
-		int getBlue255() const;
+		Color operator+(Color const &c) const;
+		Color operator-(Color const &c) const;
+		Color operator*(Color const &c) const;
+		Color operator*(float const &f) const;
+		Color add(Color const &c) const;
 
-		void setRed(float r);
-		void setGreen(float g);
-		void setBlue(float b);
+		Color normalize();
 
-		Color operator+(Color const &rhs) const;
-		Color operator-(Color const &rhs) const;
-		Color operator*(Color const &rhs) const;
-		Color operator*(float const &rhs) const;
+		float r;
+		float g;
+		float b;
 
-	private:
-	
-		float red;
-		float green;
-		float blue;
+		// static Colors
+
+		static Color black;
+		static Color white;
+		static Color red;
+		static Color green;
+		static Color blue;
 
 };
-
-std::ostream &operator<<(std::ostream &o, Color const &i);
