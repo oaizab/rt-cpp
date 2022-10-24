@@ -15,6 +15,7 @@
 #include "Intersection.hpp"
 #include "Plane.hpp"
 #include "Cylinder.hpp"
+#include "Cone.hpp"
 
 
 #include <iostream>

@@ -45,11 +45,17 @@ Intersections World::intersect_world(Ray r)
 	for (Shape *s : objects)
 	{
 		Intersections i = s->intersect(r);
-		if (i.count > 0)
+		int j = 0;
+		while (j < i.count)
 		{
-			xs.add(i[0]);
-			xs.add(i[1]);
+			xs.add(i[j]);
+			j++;
 		}
+		// if (i.count > 0)
+		// {
+		// 	xs.add(i[0]);
+		// 	xs.add(i[1]);
+		// }
 	}
 	return xs;
 }

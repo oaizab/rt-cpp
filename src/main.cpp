@@ -2,9 +2,12 @@
 
 // int main()
 // {
-// 	Cylinder c;
-// 	Tuple n = c.normalAt(Tuple::point(-1, 1, 0));
-// 	std::cout << n.x << ' ' << n.y << ' ' << n.z << ' ' << n.w << std::endl;
+// 	Cone c;
+// 	c.min = -0.5;
+// 	c.max = 0.5;
+// 	Ray r(Tuple::point(0, 0, -0.25), Tuple::vector(0, 1, 0).normalize());
+// 	Intersections xs = c.intersect(r);
+// 	std::cout << xs.count << std::endl;
 // 	return 0;
 // }
 
@@ -41,10 +44,14 @@ int main()
 	right.material.diffuse = 0.7;
 	right.material.specular = 1;
 
-	Cylinder left = Cylinder(-1.5, 1);
-	left.setTransform(Matrix::translation(-1.5, 0.33, -0.75) * \
-		Matrix::scaling(0.33, 0.33, 0.33) * Matrix::rotation_x(2*M_PI / 3));
-	left.addTransform(Matrix::rotation_y(M_PI / 12));
+	Cone left = Cone(-1, 0);
+	// left.addTransform(Matrix::rotation_y(M_PI / 2));
+	// left.addTransform(Matrix::translation(-1.5, 1, -2) * \
+	// 	Matrix::scaling(0.33, 0.33, 0.33) * Matrix::rotation_x(M_PI / 2));
+	// left.addTransform(Matrix::rotation_y(-M_PI / 12));
+	left.addTransform(Matrix::scaling(1,-3,1));
+	left.addTransform(Matrix::rotation_x(-M_PI / 2));
+	left.addTransform(Matrix::rotation_y(radians(60)));
 	left.material = Material();
 	left.material.color = Color(1, 0.8, 0.1);
 	left.material.diffuse = 0.7;
@@ -59,14 +66,14 @@ int main()
 	w.objects.push_back(&lw);
 	w.objects.push_back(&rw);
 
-	w.objects.push_back(&mid);
-	w.objects.push_back(&right);
+	// w.objects.push_back(&mid);
+	// w.objects.push_back(&right);
 	w.objects.push_back(&left);
 
 	
 	Camera c = Camera(1000, 500, M_PI / 3);
-	c.transform = Matrix::view_transform(Tuple::point(0, 2, -5), \
-		Tuple::point(0, 1, 0), Tuple::vector(0, 1, 0));
+	c.transform = Matrix::view_transform(Tuple::point(0, 0, -15), \
+		Tuple::point(0, 0, 0), Tuple::vector(0, 1, 0));
 	
 	Canvas image = c.render(w);
 	image.save_to_ppm("image.ppm");
