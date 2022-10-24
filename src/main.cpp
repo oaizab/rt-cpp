@@ -14,7 +14,7 @@ int main()
 	// //fl.addTransform(Matrix::translation(0, -2, 0));
 	// fl.material.color = Color(1, 0.9, 0.9);
 	// fl.material.specular = 0.0f;
-	Canvas texture = Canvas::canvas_from_ppm("texure.ppm");
+	Canvas texture = Canvas::canvas_from_ppm("texture.ppm");
 	Plane lw;
 	lw.setTransform(Matrix::translation(0, 0, 5) * \
 		Matrix::rotation_y(-M_PI / 4) * Matrix::rotation_x(M_PI / 2));
@@ -29,6 +29,7 @@ int main()
 	Sphere mid;// = Sphere();
 	//mid.setTransform(Matrix::translation(-0.5, 1, 0.5));
 	mid.addTransform(Matrix::rotation_x(M_PI));
+	mid.addTransform(Matrix::rotation_z(M_PI));
 	// mid.material.setPattern(Checker(24, 8, Color(0,0,0), Color(1,1,1)));
 	mid.material.setPattern(Image(texture));
 	mid.material.color = Color(0.1, 1, 0.5);
