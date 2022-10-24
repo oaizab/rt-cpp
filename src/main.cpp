@@ -1,5 +1,12 @@
 #include "main.hpp"
 
+// int main()
+// {
+// 	Cylinder c;
+// 	Tuple n = c.normalAt(Tuple::point(-1, 1, 0));
+// 	std::cout << n.x << ' ' << n.y << ' ' << n.z << ' ' << n.w << std::endl;
+// 	return 0;
+// }
 
 int main()
 {
@@ -34,9 +41,10 @@ int main()
 	right.material.diffuse = 0.7;
 	right.material.specular = 1;
 
-	Sphere left = Sphere();
+	Cylinder left = Cylinder(-1.5, 1);
 	left.setTransform(Matrix::translation(-1.5, 0.33, -0.75) * \
-		Matrix::scaling(0.33, 0.33, 0.33));
+		Matrix::scaling(0.33, 0.33, 0.33) * Matrix::rotation_x(2*M_PI / 3));
+	left.addTransform(Matrix::rotation_y(M_PI / 12));
 	left.material = Material();
 	left.material.color = Color(1, 0.8, 0.1);
 	left.material.diffuse = 0.7;
@@ -57,7 +65,7 @@ int main()
 
 	
 	Camera c = Camera(1000, 500, M_PI / 3);
-	c.transform = Matrix::view_transform(Tuple::point(0, 4, -15), \
+	c.transform = Matrix::view_transform(Tuple::point(0, 2, -5), \
 		Tuple::point(0, 1, 0), Tuple::vector(0, 1, 0));
 	
 	Canvas image = c.render(w);
