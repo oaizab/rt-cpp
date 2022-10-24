@@ -18,6 +18,8 @@ class Canvas
 		Color pixel_at(int x, int y) const;
 		void write_pixel(int x, int y, Color const &c);
 		void save_to_ppm(std::string const &filename) const;
+		
+		static Canvas canvas_from_ppm(std::string const &filename);
 
 	private:
 		int _width;

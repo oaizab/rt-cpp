@@ -4,6 +4,7 @@
 #include "Matrix.hpp"
 #include "Tuple.hpp"
 #include "Material.hpp"
+#include "UV.hpp"
 
 class Intersections; 
 
@@ -15,6 +16,7 @@ class Shape
 
 		virtual Intersections intersect(Ray const &ray) = 0;
 		virtual Tuple normalAt(Tuple const &point) = 0;
+		virtual UV uvAt(Tuple const &point) = 0;
 
 		Matrix &inverse();
 		void setTransform(Matrix const &m);

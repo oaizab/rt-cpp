@@ -1,5 +1,6 @@
 #include "Plane.hpp"
 #include "utils.hpp"
+#include <cmath>
 
 
 Plane::Plane(): Shape()
@@ -29,4 +30,12 @@ Intersections Plane::intersect(Ray const &r)
 	xs.add(Intersection(t, this));
 	xs.add(Intersection(t, this));
 	return xs;
+}
+
+UV Plane::uvAt(Tuple const &point)
+{
+	Tuple objectPoint = inverse() * point;
+	float x = objectPoint.x - floor(objectPoint.x);
+	float z = objectPoint.z - floor(objectPoint.z);
+	return UV(x, z);
 }

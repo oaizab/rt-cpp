@@ -1,5 +1,6 @@
 #include "Canvas.hpp"
 #include <fstream>
+#include <iostream>
 
 Canvas::Canvas() : _width(0), _height(0), _pixels(nullptr)
 {
@@ -83,4 +84,31 @@ void Canvas::save_to_ppm(std::string const &filename) const
 		file << "\n";
 	}
 	file.close();
+}
+
+Canvas Canvas::canvas_from_ppm(std::string const &filename)
+{
+	std::ifstream file;
+	file.open(filename);
+	std::string line;
+	std::getline(file, line);
+	if (line != "P3")
+		return Canvas();
+	std::getline(file, line);
+	int width = std::stoi(line.substr(0, line.find(' ')));
+	int height = std::stoi(line.substr(line.find(' ') + 1));
+	std::getline(file, line);
+	float max = std::stoi(line);
+	Canvas c(width, height);
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			int r, g, b;
+			file >> r >> g >> b;
+			c._pixels[i][j] = Color(r / max, g / max, b / max);
+		}
+	}
+	file.close();
+	return c;
 }

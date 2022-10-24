@@ -66,7 +66,7 @@ Color World::shade_hit(Computation comp)
 	for (Light l : lights)
 	{
 		bool in_shadow = is_shadowed(comp.over_point, l);
-		c = c + comp.object->material.lighting(l, comp.over_point, comp.eyev, comp.normalv, in_shadow);
+		c = c + comp.object->material.lighting(l, *comp.object, comp.over_point, comp.eyev, comp.normalv, in_shadow);
 	}
 	return c;
 }

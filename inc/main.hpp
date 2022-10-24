@@ -16,6 +16,7 @@
 #include "Plane.hpp"
 #include "Cylinder.hpp"
 #include "Cone.hpp"
+#include "Image.hpp"
 
 
 #include <iostream>

@@ -10,4 +10,5 @@ class Sphere : public Shape
 
 		virtual Intersections intersect(Ray const &ray);
 		virtual Tuple normalAt(Tuple const &point);
+		virtual UV uvAt(Tuple const &point);
 };

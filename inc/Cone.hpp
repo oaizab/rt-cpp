@@ -12,6 +12,7 @@ class Cone: public Shape
 
 		virtual Tuple normalAt(const Tuple& point);
 		virtual Intersections intersect(Ray const &r);
+		virtual UV uvAt(Tuple const &point);
 
 		bool checkCap(Ray const &r, float t, float y);
 		Intersections intersectCaps(Ray const &r, Intersections *xs = nullptr);

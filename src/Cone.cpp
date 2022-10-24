@@ -127,3 +127,24 @@ Intersections Cone::intersectCaps(Ray const &r, Intersections *xs)
 	}
 	return xss;
 }
+
+UV Cone::uvAt(Tuple const &point)
+{
+	Tuple objectPoint = inverse() * point;	
+	float x = objectPoint.x;
+	float y = objectPoint.y;
+	float z = objectPoint.z;
+	float theta = atan2(x, z);
+	float u = 1 - (theta + M_PI) / (2 * M_PI);
+	float v = y - (int)y;
+	return UV(u, v);
+}
+// UV Cylinder::uvAt(Tuple const &point)
+// {
+// 	Tuple objectPoint = inverse() * point;
+	
+// 		float theta = atan2(objectPoint.x, objectPoint.z);
+// 		float u = 1 - (theta + M_PI) / (2 * M_PI);
+// 		float v = objectPoint.y - floor(objectPoint.y);
+// 		return UV(u, v);
+// }

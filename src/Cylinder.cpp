@@ -111,3 +111,13 @@ Intersections Cylinder::intersectCaps(Ray const &r, Intersections *xs)
 	}
 	return xss;
 }
+
+UV Cylinder::uvAt(Tuple const &point)
+{
+	Tuple objectPoint = inverse() * point;
+	
+		float theta = atan2(objectPoint.x, objectPoint.z);
+		float u = 1 - (theta + M_PI) / (2 * M_PI);
+		float v = objectPoint.y - floor(objectPoint.y);
+		return UV(u, v);
+}

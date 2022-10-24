@@ -11,6 +11,7 @@ class Plane : public Shape
 
 		virtual Tuple normalAt(const Tuple& point);
 		virtual Intersections intersect(Ray const &r);
+		virtual UV uvAt(Tuple const &point);
 
 		Tuple normal;
 };

@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "utils.hpp"
+#include "Shape.hpp"
 
 Material::Material()
 {
@@ -11,10 +12,12 @@ Material::Material()
 	diffuse = 0.9;
 	specular = 0.9;
 	shininess = 200.0;
+	pattern = false;
 }
 
 Material::Material(Color color, float ambient, float diffuse, float specular, float shininess):
-	color(color), ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess)
+	color(color), ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess), \
+	pattern(false)
 {
 }
 
@@ -36,13 +39,23 @@ Material &Material::operator=(const Material &m)
 		diffuse = m.diffuse;
 		specular = m.specular;
 		shininess = m.shininess;
+		pattern = m.pattern;
+		checker = m.checker;
 	}
 	return *this;
 }
 
-Color Material::lighting(Light const &light, Tuple const &position, Tuple const &eye, Tuple const &normal, bool in_shadow)
+Color Material::lighting(Light const &light, Shape &object, Tuple const &position, Tuple const &eye, Tuple const &normal, bool in_shadow)
 {
-	Color effective_color = color * light.intensity;
+	Color c;
+	if (object.material.pattern)
+	{
+		UV uv = object.uvAt(position);
+		c = checker->pattern_at(uv.u, uv.v);
+	}
+	else
+		c = color;
+	Color effective_color = c * light.intensity;
 	Color ambient_color = effective_color * ambient;
 	if (in_shadow)
 		return ambient_color;
@@ -69,4 +82,10 @@ Color Material::lighting(Light const &light, Tuple const &position, Tuple const 
 		}
 	}
 	return ambient_color + diffuse_color + specular_color;
+}
+
+void Material::setPattern(Pattern const &c)
+{
+	pattern = true;
+	checker = (Pattern *) &c;
 }
