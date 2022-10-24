@@ -1,5 +1,11 @@
 #include "Intersection.hpp"
 
+Intersection::Intersection()
+{
+	object = NULL;
+	t = -1;
+}
+
 Intersection::Intersection(float t, Shape *shape)
 {
 	this->t = t;

@@ -1,23 +1,21 @@
 #include "main.hpp"
 
+
 int main()
 {
-	Sphere fl = Sphere();
-	fl.setTransform(Matrix::scaling(10, 0.01, 10));
-	fl.material = Material();
-	fl.material.color = Color(1, 0.9, 0.9);
-	fl.material.specular = 0.7;
 
-	Sphere lw = Sphere();
+	Plane fl = Plane();
+	fl.material.color = Color(1, 0.9, 0.9);
+	fl.material.specular = 0.0f;
+
+	Plane lw;
 	lw.setTransform(Matrix::translation(0, 0, 5) * \
-		Matrix::rotation_y(-M_PI / 4) * Matrix::rotation_x(M_PI / 2) * \
-		Matrix::scaling(10, 0.01, 10));
+		Matrix::rotation_y(-M_PI / 4) * Matrix::rotation_x(M_PI / 2));
 	lw.material = fl.material;
 
-	Sphere rw = Sphere();
+	Plane rw;
 	rw.setTransform(Matrix::translation(0, 0, 5) * \
-		Matrix::rotation_y(M_PI / 4) * Matrix::rotation_x(M_PI / 2) * \
-		Matrix::scaling(10, 0.01, 10));
+		Matrix::rotation_y(M_PI / 4) * Matrix::rotation_x(M_PI / 2));
 	rw.material = fl.material;
 
 	Sphere mid = Sphere();
@@ -52,12 +50,14 @@ int main()
 	w.objects.push_back(&fl);
 	w.objects.push_back(&lw);
 	w.objects.push_back(&rw);
+
 	w.objects.push_back(&mid);
 	w.objects.push_back(&right);
 	w.objects.push_back(&left);
 
+	
 	Camera c = Camera(1000, 500, M_PI / 3);
-	c.transform = Matrix::view_transform(Tuple::point(0, 2, -5), \
+	c.transform = Matrix::view_transform(Tuple::point(0, 4, -15), \
 		Tuple::point(0, 1, 0), Tuple::vector(0, 1, 0));
 	
 	Canvas image = c.render(w);

@@ -6,6 +6,7 @@
 class Intersection
 {
 	public:
+		Intersection();
 		Intersection(float t, Shape *shape);
 		Intersection(float t, Shape &shape);
 		Intersection(Intersection const &src);

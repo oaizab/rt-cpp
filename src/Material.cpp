@@ -2,6 +2,7 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include "utils.hpp"
 
 Material::Material()
 {
@@ -49,7 +50,7 @@ Color Material::lighting(Light const &light, Tuple const &position, Tuple const 
 	float light_dot_normal = lightv.dot(normal);
 	Color diffuse_color;
 	Color specular_color;
-	if (light_dot_normal < 0)
+	if (light_dot_normal < 0.0f)
 	{
 		diffuse_color = Color(0, 0, 0);
 		specular_color = Color(0, 0, 0);
@@ -59,7 +60,7 @@ Color Material::lighting(Light const &light, Tuple const &position, Tuple const 
 		diffuse_color = effective_color * diffuse * light_dot_normal;
 		Tuple reflectv = (-lightv).reflect(normal);
 		float reflect_dot_eye = reflectv.dot(eye);
-		if (reflect_dot_eye <= 0)
+		if (reflect_dot_eye <= 0.0f)
 			specular_color = Color(0, 0, 0);
 		else
 		{

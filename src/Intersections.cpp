@@ -10,7 +10,7 @@ Intersections::Intersections(Intersection const &i1, Intersection const &i2): co
 	intersections.push_back(i2);
 }
 
-Intersections::Intersections(Intersection const &src)
+Intersections::Intersections(Intersections const &src)
 {
 	*this = src;
 }

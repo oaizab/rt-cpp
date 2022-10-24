@@ -10,7 +10,7 @@ class Intersections
 	public:
 		Intersections();
 		Intersections(Intersection const &i1, Intersection const &i2);
-		Intersections(Intersection const &src);
+		Intersections(Intersections const &src);
 		~Intersections();
 
 
